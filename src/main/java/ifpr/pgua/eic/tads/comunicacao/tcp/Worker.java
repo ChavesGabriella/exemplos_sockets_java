@@ -5,9 +5,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServidorTCP {
+public class Worker implements Runnable {
 
-    private ServerSocket servidor;
     private Socket cliente;
 
 
@@ -18,17 +17,9 @@ public class ServidorTCP {
     private BufferedWriter saida;
 
 
-    public ServidorTCP(String HOST,int PORTA)throws IOException {
-        servidor = new ServerSocket(PORTA);
-    }
-
-    public void escuta() throws IOException {
-        System.out.println("Aguardando conexão...");
-        cliente = servidor.accept();
-        System.out.println("Conectado..."+cliente.getInetAddress()+":"+cliente.getPort());
-
+    public Worker(Socket socket)throws IOException {
+        this.cliente = socket;
         abreFluxos();
-
     }
 
     private void abreFluxos() throws IOException{
@@ -36,7 +27,7 @@ public class ServidorTCP {
         saida = new BufferedWriter(new OutputStreamWriter(cliente.getOutputStream()));
     }
 
-    public void processa(){
+    public void run(){ //representa o ciclo infinito
 
         try{
             while(true){
@@ -75,6 +66,7 @@ public class ServidorTCP {
                 saida.flush();
 
             }
+            fecha();
         }catch (IOException e){
 
         }
