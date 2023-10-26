@@ -27,7 +27,7 @@ public class ServidorTCP {
         cliente = servidor.accept();
         System.out.println("Conectado..."+cliente.getInetAddress()+":"+cliente.getPort());
 
-        abreFluxos();
+        //abreFluxos();
 
     }
 
@@ -36,8 +36,11 @@ public class ServidorTCP {
         saida = new BufferedWriter(new OutputStreamWriter(cliente.getOutputStream()));
     }
 
-    public void processa(){
-
+    public void processa() throws IOException{
+        Thread t = new Thread(new Worker(cliente));
+        t.start();
+        
+        /*
         try{
             while(true){
                 String msgEntrada = entrada.readLine();
@@ -46,6 +49,7 @@ public class ServidorTCP {
                 if(msgEntrada.toLowerCase().equals("sair")){
                     break;
                 }
+                //somar: 1 2
                 if(msgEntrada.toLowerCase().startsWith("somar:")){
                     String[] tokens = msgEntrada.split(" ");
                     try{
@@ -54,9 +58,10 @@ public class ServidorTCP {
 
                         int soma = n1+n2;
 
-                        saida.write("Resiltado:"+soma+"\n");
+                        saida.write("Resultado:"+soma+"\n");
+
                     }catch(NumberFormatException e){
-                        saida.write("Ops... algo de errado\n");
+                        saida.write("Ops...algo de errado!\n");
                     }
                 }
                 else if(msgEntrada.toLowerCase().startsWith("contar:")){
@@ -78,7 +83,7 @@ public class ServidorTCP {
         }catch (IOException e){
 
         }
-
+        */ 
     }
 
     public void fecha() throws IOException{
@@ -86,10 +91,5 @@ public class ServidorTCP {
         saida.close();
         cliente.close();
     }
-
-
-
-
-
 
 }

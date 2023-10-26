@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Worker implements Runnable {
+public class Worker implements Runnable{
 
     private Socket cliente;
 
@@ -27,7 +27,8 @@ public class Worker implements Runnable {
         saida = new BufferedWriter(new OutputStreamWriter(cliente.getOutputStream()));
     }
 
-    public void run(){ //representa o ciclo infinito
+    @Override
+    public void run(){
 
         try{
             while(true){
@@ -37,6 +38,7 @@ public class Worker implements Runnable {
                 if(msgEntrada.toLowerCase().equals("sair")){
                     break;
                 }
+                //somar: 1 2
                 if(msgEntrada.toLowerCase().startsWith("somar:")){
                     String[] tokens = msgEntrada.split(" ");
                     try{
@@ -45,9 +47,10 @@ public class Worker implements Runnable {
 
                         int soma = n1+n2;
 
-                        saida.write("Resiltado:"+soma+"\n");
+                        saida.write("Resultado:"+soma+"\n");
+
                     }catch(NumberFormatException e){
-                        saida.write("Ops... algo de errado\n");
+                        saida.write("Ops...algo de errado!\n");
                     }
                 }
                 else if(msgEntrada.toLowerCase().startsWith("contar:")){
@@ -70,7 +73,7 @@ public class Worker implements Runnable {
         }catch (IOException e){
 
         }
-
+        
     }
 
     public void fecha() throws IOException{
@@ -78,10 +81,4 @@ public class Worker implements Runnable {
         saida.close();
         cliente.close();
     }
-
-
-
-
-
-
 }
